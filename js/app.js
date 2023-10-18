@@ -1,5 +1,6 @@
-import datos from "../data/data.json" assert { type: "json" };
 import { Gift } from "./clases.js"
+import { cargaDeDatos } from './funciones.js'
+let datos=[];
 
 const cuerpoTabla= document.querySelector('#cuerpo__tabla');
 const myModal = new bootstrap.Modal(document.getElementById("modalGift"));
@@ -28,13 +29,13 @@ window.mostrarModal = (id) => {
     datos[index].tiempo = document.querySelector("#tiempoModal").value;
     datos[index].precio = document.querySelector("#precioModal").value;
     datos[index].imagen = document.querySelector("#imagenModal").value;
-  
+    localStorage.setItem('datos', JSON.stringify(datos));
     cargarTabla();
     myModal.hide();
   };
 
 const cargarTabla=()=>{
-
+    datos=JSON.parse(localStorage.getItem("datos"));
     cuerpoTabla.innerHTML="";
     datos.map((item)=>{
 
@@ -73,6 +74,8 @@ const agregarGift = (event) => {
   
     datos.push(new Gift(id, gift, tipo, tiempo, precio, imagen));
     document.querySelector("#formGift").reset();
+
+    localStorage.setItem('datos', JSON.stringify(datos));
     cargarTabla();
   };
 
@@ -85,12 +88,13 @@ const agregarGift = (event) => {
   
     if (validar) {
       datos.splice(index, 1);
+      localStorage.setItem('datos', JSON.stringify(datos));
       cargarTabla();
     }
   };
   
   
-
+cargaDeDatos()
 cargarTabla()
 
 document.querySelector('#formGift').addEventListener('submit',agregarGift);
